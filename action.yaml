@@ -17,9 +17,6 @@ inputs:
     required: false
     default: ''
   
-outputs:
-  http_links: # id of output
-    description: 'Any public links from the preview environments generated'
 runs:
   using: 'composite'
   steps:

@@ -1,0 +1,32 @@
+name: 'Kurtosis GitHub Action'
+description: 'Allows you to spin up Kurtosis tests & preview environments'
+inputs:
+  path:
+    description: 'Path of the Kurtosis Package (directory, url)'
+    required: true
+  args-file:
+    descriptioon: 'Path to the arguments file'
+    required: false
+    default: ''
+  cloud_api_key:
+    descriptin: 'The API key for your Cloud Kurtosis Account; if empty we spin up locally'
+    required: false
+    default: ''
+  cloud_instance_id:
+    descriptioon: 'The instance id for the cloud Kurtosis box'
+    required: false
+    default': ''
+  
+outputs:
+  http_links: # id of output
+    description: 'Any public links from the preview environments generated'
+runs:
+  using: 'composite'
+  steps:
+      - name: Setup Kurtosis
+        run: |
+          echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
+          sudo apt update
+          sudo apt install kurtosis-cli
+          kurtosis analytics disable
+      - name: Configure Kurtosis Cloud

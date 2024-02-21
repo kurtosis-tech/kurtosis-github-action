@@ -50,10 +50,12 @@ runs:
       - name: Run the Kurtosis package
         run: |
           TRIMMED_PATH="${PATH//\/usr\/bin:/}"
+          ENCLAVE_NAME="${GITHUB_REF_NAME//\//-}"
+          kurtosis enclave rm ${ENCLAVE_NAME} -f || echo "Couldn't delete perhaps first run"
           if [ -n "${ARGS_FILE}" ]; then
-            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --args-file ${ARGS_FILE} | tee kurtosis_output.txt
+            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --args-file ${ARGS_FILE} --enclave ${ENCLAVE_NAME} | tee kurtosis_output.txt
           else
-            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} | tee kurtosis_output.txt
+            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --enclave ${ENCLAVE_NAME} | tee kurtosis_output.txt
           fi
         shell: bash
         env:

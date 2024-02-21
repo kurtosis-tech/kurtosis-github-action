@@ -42,6 +42,7 @@ runs:
             echo "Retry $n/3..."
             sleep 5
           done
+          kurtosis engine restart
         env:
           KURTOSIS_CLOUD_API_KEY: ${{ inputs.cloud_api_key }}
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}

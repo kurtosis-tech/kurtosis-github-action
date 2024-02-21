@@ -8,8 +8,8 @@ This GitHub Action integrates Kurtosis into your CI/CD pipeline, allowing you to
 
 | Input              | Description                                                                                     | Required | Default |
 |--------------------|-------------------------------------------------------------------------------------------------|----------|---------|
-| `path`             | Path of the Kurtosis test suite (directory or URL).                                             | Yes      | N/A     |
-| `args`             | Arguments to pass to the Kurtosis test suite, specified as a file path.                        | No       | `''`    |
+| `path`             | Path of the Kurtosis package (directory or URL).                                             | Yes      | N/A     |
+| `args`             | Arguments to pass to the Kurtosis, specified as a file path.                        | No       | `''`    |
 | `cloud_api_key`    | API key for Kurtosis Cloud. If not provided, tests will run locally.                           | No       | `''`    |
 | `cloud_instance_id`| Instance ID for the Kurtosis Cloud environment. Required if `cloud_api_key` is provided.       | No       | `''`    |
 
@@ -24,7 +24,7 @@ jobs:
       - name: Kurtosis Tests
         uses: kurtosis-tech/kurtosis-github-action@v1
         with:
-          path: './path-to-your-tests'
+          path: './path-to-your-kurtosis-package'
           args: './test-args.yaml'
           cloud_api_key: ${{ secrets.KURTOSIS_CLOUD_API_KEY }}
           cloud_instance_id: ${{ secrets.KURTOSIS_CLOUD_INSTANCE_ID }}
@@ -41,7 +41,7 @@ jobs:
       - name: Kurtosis Tests
         uses: kurtosis-tech/kurtosis-github-action@v1
         with:
-          path: './path-to-your-tests'
+          path: './path-to-your-kurtosis-package'
 ```
 
 You can visit the following - [cloud](https://github.com/kurtosis-tech/mern-package/pull/16) or [non-cloud](https://github.com/kurtosis-tech/mern-package/pull/15) to see this in action.

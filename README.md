@@ -6,12 +6,14 @@ This GitHub Action integrates Kurtosis into your CI/CD pipeline, allowing you to
 
 ## Inputs
 
-| Input              | Description                                                                                     | Required | Default |
-|--------------------|-------------------------------------------------------------------------------------------------|----------|---------|
-| `path`             | Path of the Kurtosis package (directory or URL).                                             | Yes      | N/A     |
-| `args`             | Arguments to pass to the Kurtosis, specified as a file path.                        | No       | `''`    |
-| `cloud_api_key`    | API key for Kurtosis Cloud. If not provided, tests will run locally.                           | No       | `''`    |
-| `cloud_instance_id`| Instance ID for the Kurtosis Cloud environment. Required if `cloud_api_key` is provided.       | No       | `''`    |
+| Input              | Description                                                                                     | Required | Default        |
+|--------------------|-------------------------------------------------------------------------------------------------|----------|----------------|
+| `path`             | Path of the Kurtosis package (directory or URL).                                                | Yes      | N/A            |
+| `args`             | Arguments to pass to Kurtosis, specified as a file path.                                        | No       | `''`           |
+| `cloud_api_key`    | API key for Kurtosis Cloud. If not provided, tests will run locally.                            | No       | `''`           |
+| `cloud_instance_id`| Instance ID for the Kurtosis Cloud environment. Required if `cloud_api_key` is provided.        | No       | `''`           |
+| `version`          | The version of Kurtosis to use. If not specified, the latest version will be used.              | No       | `latest`       |
+
 
 ## Example Usage
 
@@ -51,7 +53,6 @@ You can visit the following - [cloud](https://github.com/kurtosis-tech/mern-pack
 This GitHub Action is a work in progress, and contributions are welcome. Here are some of the planned improvements:
 
 - [ ] Address concurrency issues with restarting the Kurtosis engine; current implementation assumes sequential execution.
-- [ ] Support for versioned Kurtosis installations to allow users to specify which version of Kurtosis they want to use.
 
 ## Support
 

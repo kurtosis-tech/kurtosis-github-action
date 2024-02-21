@@ -70,6 +70,12 @@ runs:
           # Extract the Enclave UUID
           ENCLAVE_UUID=$(echo "$KURTOSIS_OUTPUT" | grep 'UUID:' | head -n 1 | awk '{print $2}')
 
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          ENCLAVE_NAME="${BRANCH_NAME//\//-}"
+
+          echo "Visit enclave: $ENCLAVE_NAME on https://cloud.kurtosis.com"
+
+
           # Loop through each service line that contains an HTTP port
           echo "$KURTOSIS_OUTPUT" | grep 'http:' | while read -r service_line; do
               # Extract the Service UUID
@@ -84,8 +90,20 @@ runs:
               # Construct the URL
               URL="https://${PORT_MAPPING}-${SERVICE_UUID}-${ENCLAVE_UUID}-${INSTANCE_ID_PREFIX}.cloud.kurtosis.com/"
 
-              echo "Service URL: $URL"
+              echo "Service URL: $URL" >> comment_output.txt
           done
         shell: bash
         env:
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}
+        - name: Read Comment Body
+          if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
+          id: read_comment_body
+          run: |
+            echo "::set-output name=comment_body::$(cat comment_output.txt)"
+        - name: Create comment with output
+          if: github.event_name == 'pull_request' && inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
+          uses: peter-evans/create-or-update-comment@v4
+          with:
+            issue-number: ${{ github.event.pull_request.number }}
+            body: ${{ steps.read_comment_body.outputs.comment_body }}
+            reactions: '+1'

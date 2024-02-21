@@ -104,9 +104,20 @@ runs:
           COMMENT_BODY="${COMMENT_BODY//$'\r'/'%0D'}"  # Replace carriage return characters with %0D
           echo "::set-output name=comment_body::${COMMENT_BODY}"
         shell: bash
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: <!-- KURTOSIS_GENERATED_COMMENT -->       
       - name: Create comment with output
         if: github.event_name == 'pull_request' && inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ steps.read_comment_body.outputs.comment_body }}
+          edit-mode: replace
+          comment-id: ${{ steps.fc.outputs.comment-id }}          
+          body: |
+            <!-- KURTOSIS_GENERATED_COMMENT -->
+            ${{ steps.read_comment_body.outputs.comment_body }}

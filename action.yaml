@@ -40,6 +40,7 @@ runs:
         shell: bash
       - name: Run the Kurtosis package
         run: |
+          ls
           TRIMMED_PATH="${PATH//\/usr\/bin:/}"
           if [ -n "${ARGS_FILE}" ]; then
             kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --args-file ${ARGS_FILE}

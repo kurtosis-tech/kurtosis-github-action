@@ -33,7 +33,15 @@ runs:
         shell: bash
       - name: Configure Kurtosis Cloud
         if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
-        run: kurtosis cloud load ${CLOUD_INSTANCE_ID}
+        run: |
+          n=0
+          until [ "$n" -ge 3 ]
+          do
+            kurtosis cloud load ${CLOUD_INSTANCE_ID} && break
+            n=$((n+1))
+            echo "Retry $n/3..."
+            sleep 5
+          done
         env:
           KURTOSIS_CLOUD_API_KEY: ${{ inputs.cloud_api_key }}
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}

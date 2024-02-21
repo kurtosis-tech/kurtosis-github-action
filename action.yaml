@@ -111,6 +111,7 @@ runs:
           echo "::set-output name=comment_body::${COMMENT_BODY}"
         shell: bash
       - name: Find Comment
+        if: github.event_name == 'pull_request' && inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
         uses: peter-evans/find-comment@v3
         id: fc
         with:

@@ -67,7 +67,9 @@ runs:
         run: |
           KURTOSIS_OUTPUT="$(cat kurtosis_output.txt)"
 
-          echo "$KURTOSIS_OUTPUT"
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          ENCLAVE_NAME="${BRANCH_NAME//\//-}"
+          echo "Enclave: $ENCLAVE_NAME started on https://cloud.kurtosis.com" > comment_output.txt
 
           # Extract Enclave UUID
           ENCLAVE_UUID=$(echo "$KURTOSIS_OUTPUT" | grep 'UUID:' | head -n 1 | awk '{print $2}')
@@ -87,7 +89,7 @@ runs:
               # Construct the URL
               URL="https://${PORT_NUMBER}-${SERVICE_UUID}-${ENCLAVE_UUID}-${INSTANCE_ID_PREFIX}.cloud.kurtosis.com/"
               
-              echo "Service URL: $URL"
+              echo "Service URL: $URL" >> comment_output.txt
             fi
           done
         shell: bash

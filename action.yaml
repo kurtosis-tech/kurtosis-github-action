@@ -93,15 +93,15 @@ runs:
         shell: bash
         env:
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}
-        - name: Read Comment Body
-          if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
-          id: read_comment_body
-          run: |
-            echo "::set-output name=comment_body::$(cat comment_output.txt)"
-        - name: Create comment with output
-          if: github.event_name == 'pull_request' && inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
-          uses: peter-evans/create-or-update-comment@v4
-          with:
-            issue-number: ${{ github.event.pull_request.number }}
-            body: ${{ steps.read_comment_body.outputs.comment_body }}
-            reactions: '+1'
+      - name: Read Comment Body
+        if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
+        id: read_comment_body
+        run: |
+          echo "::set-output name=comment_body::$(cat comment_output.txt)"
+      - name: Create comment with output
+        if: github.event_name == 'pull_request' && inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.read_comment_body.outputs.comment_body }}
+          reactions: '+1'

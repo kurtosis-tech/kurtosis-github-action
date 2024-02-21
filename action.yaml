@@ -41,9 +41,9 @@ runs:
       - name: Run the Kurtosis package
         run: |
           if [ -n "${ARGS_FILE}" ]; then
-            kurtosis run ${PATH} --args-file ${ARGS_FILE}
+            kurtosis run $GITHUB_WORKSPACE/${PATH}} --args-file ${ARGS_FILE}
           else
-            kurtosis run ${PATH}
+            kurtosis run $GITHUB_WORKSPACE/${PATH}}
           fi
         shell: bash
         env:

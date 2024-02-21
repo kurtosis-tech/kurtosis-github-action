@@ -29,12 +29,14 @@ runs:
           sudo apt update
           sudo apt install kurtosis-cli
           kurtosis analytics disable
+        shell: bash
       - name: Configure Kurtosis Cloud
         if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
         run: kurtosis cloud load ${CLOUD_INSTANCE_ID}
         env:
           KURTOSIS_CLOUD_API_KEY: ${{ inputs.cloud_api_key }}
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}
+        shell: bash
       - name: Run the Kurtosis package
         run: |
           if [ -n "${ ARGS_FILE }" ]; then
@@ -42,6 +44,7 @@ runs:
           else
             kurtosis run ${ PATH }
           fi
+        shell: bash
         env:
           ARGS_FILE: ${{ inputs.args }}
           PATH: ${{ input.path }}

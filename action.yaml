@@ -51,11 +51,42 @@ runs:
         run: |
           TRIMMED_PATH="${PATH//\/usr\/bin:/}"
           if [ -n "${ARGS_FILE}" ]; then
-            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --args-file ${ARGS_FILE}
+            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --args-file ${ARGS_FILE} | tee kurtosis_output.txt
           else
-            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH}
+            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} | tee kurtosis_output.txt
           fi
         shell: bash
         env:
           ARGS_FILE: ${{ inputs.args }}
           PATH: ${{ inputs.path }}
+      - name: Generate Service Links
+        if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
+        run: |
+          KURTOSIS_OUTPUT="$(cat kurtosis_output.txt)"
+          
+          echo "$KURTOSIS_OUTPUT"
+
+          # Extract Enclave UUID
+          ENCLAVE_UUID=$(echo "$KURTOSIS_OUTPUT" | grep 'UUID:' | head -n 1 | awk '{print $2}')
+
+          # Extract Service UUIDs for services with an HTTP port
+          SERVICE_UUIDS=$(echo "$KURTOSIS_OUTPUT" | grep 'http:' | awk '{print $1}')
+
+          # Extract the first 12 characters of the cloud instance ID
+          INSTANCE_ID_PREFIX=$(echo "${{ inputs.cloud_instance_id }}" | cut -c 1-12)
+
+          # For each service, generate the link
+          echo "$SERVICE_UUIDS" | while read -r SERVICE_UUID; do
+            if [[ ! -z "$SERVICE_UUID" ]]; then
+              # Extract the port number
+              PORT_NUMBER=$(echo "$KURTOSIS_OUTPUT" | grep "$SERVICE_UUID" | grep 'http:' | awk '{print $4}' | cut -d':' -f2 | cut -d'/' -f1)
+              
+              # Construct the URL
+              URL="https://${PORT_NUMBER}-${SERVICE_UUID}-${ENCLAVE_UUID}-${INSTANCE_ID_PREFIX}.cloud.kurtosis.com/"
+              
+              echo "Service URL: $URL"
+            fi
+          done
+        shell: bash
+        env:
+          CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}

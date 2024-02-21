@@ -4,18 +4,18 @@ inputs:
   path:
     description: 'Path of the Kurtosis Package (directory, url)'
     required: true
-  args-file:
-    descriptioon: 'Path to the arguments file'
+  args:
+    description: 'Path to the arguments file'
     required: false
     default: ''
   cloud_api_key:
-    descriptin: 'The API key for your Cloud Kurtosis Account; if empty we spin up locally'
+    description: 'The API key for your Cloud Kurtosis Account; if empty we spin up locally'
     required: false
     default: ''
   cloud_instance_id:
-    descriptioon: 'The instance id for the cloud Kurtosis box'
+    description: 'The instance id for the cloud Kurtosis box'
     required: false
-    default': ''
+    default: ''
   
 outputs:
   http_links: # id of output
@@ -30,3 +30,18 @@ runs:
           sudo apt install kurtosis-cli
           kurtosis analytics disable
       - name: Configure Kurtosis Cloud
+        if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
+        run: kurtosis cloud load ${CLOUD_INSTANCE_ID}
+        env:
+          KURTOSIS_CLOUD_API_KEY: ${{ inputs.cloud_api_key }}
+          CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}
+      - name: Run the Kurtosis package
+        run: |
+          if [ -n "${ ARGS_FILE }" ]; then
+            kurtosis run ${ PATH } --args-file ${ ARGS_FILE }
+          else
+            kurtosis run ${ PATH }
+          fi
+        env:
+          ARGS_FILE: ${{ inputs.args }}
+          PATH: ${{ input.path }}

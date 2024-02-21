@@ -40,10 +40,11 @@ runs:
         shell: bash
       - name: Run the Kurtosis package
         run: |
+          TRIMMED_PATH="${PATH//\/usr\/bin:/}"
           if [ -n "${ARGS_FILE}" ]; then
-            kurtosis run $GITHUB_WORKSPACE/${PATH}} --args-file ${ARGS_FILE}
+            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH} --args-file ${ARGS_FILE}
           else
-            kurtosis run $GITHUB_WORKSPACE/${PATH}}
+            kurtosis run $GITHUB_WORKSPACE/${TRIMMED_PATH}
           fi
         shell: bash
         env:

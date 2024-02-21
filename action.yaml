@@ -39,10 +39,10 @@ runs:
         shell: bash
       - name: Run the Kurtosis package
         run: |
-          if [ -n "${ ARGS_FILE }" ]; then
-            kurtosis run ${ PATH } --args-file ${ ARGS_FILE }
+          if [ -n "${ARGS_FILE}" ]; then
+            kurtosis run ${PATH} --args-file ${ARGS_FILE}
           else
-            kurtosis run ${ PATH }
+            kurtosis run ${PATH}
           fi
         shell: bash
         env:

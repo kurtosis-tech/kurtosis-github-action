@@ -88,7 +88,7 @@ runs:
               echo "Service URL: $URL" >> comment_output.txt
             fi
           done
-          echo "Service URLs might have to be copied and pasted if you are getting 401s!"
+          echo "Service URLs if any might have to be copied and pasted if you are getting 401s!" >> comment_output.txt
         shell: bash
         env:
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}

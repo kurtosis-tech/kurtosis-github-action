@@ -99,7 +99,11 @@ runs:
         if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''
         id: read_comment_body
         run: |
-          echo "::set-output name=comment_body::$(cat comment_output.txt)"
+          COMMENT_BODY=$(cat comment_output.txt)
+          COMMENT_BODY="${COMMENT_BODY//'%'/'%25'}"  # Escape %
+          COMMENT_BODY="${COMMENT_BODY//$'\n'/'%0A'}"  # Replace newline characters with %0A
+          COMMENT_BODY="${COMMENT_BODY//$'\r'/'%0D'}"  # Replace carriage return characters with %0D
+          echo "::set-output name=comment_body::${COMMENT_BODY}"
         shell: bash
       - name: Create comment with output
         if: github.event_name == 'pull_request' && inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''

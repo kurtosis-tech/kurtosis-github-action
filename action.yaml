@@ -1,5 +1,8 @@
 name: 'Kurtosis GitHub Action'
 description: 'Allows you to spin up Kurtosis tests & preview environments'
+branding:
+  icon: 'box'
+  color: 'green'
 inputs:
   path:
     description: 'Path of the Kurtosis Package (directory, url)'

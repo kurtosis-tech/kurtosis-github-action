@@ -11,7 +11,7 @@ This is particularly useful when doing integration or end-to-end tests for a ser
 | Input              | Description                                                                                     | Required | Default        |
 |--------------------|-------------------------------------------------------------------------------------------------|----------|----------------|
 | `path`             | Path of the Kurtosis package (directory or URL).                                                | Yes      | N/A            |
-| `args`             | Arguments to pass to Kurtosis, specified as a file path.                                        | No       | `''`           |
+| `args-file`             | Arguments to pass to Kurtosis, specified as a file path.                                   | No       | `''`           |
 | `cloud_api_key`    | API key for Kurtosis Cloud. If not provided, tests will run locally.                            | No       | `''`           |
 | `cloud_instance_id`| Instance ID for the Kurtosis Cloud environment. Required if `cloud_api_key` is provided.        | No       | `''`           |
 | `version`          | The version of Kurtosis to use. If not specified, the latest version will be used.              | No       | `latest`       |
@@ -31,7 +31,7 @@ jobs:
         uses: kurtosis-tech/kurtosis-github-action@v1
         with:
           path: 'github.com/my-org/my-kurtosis-package'  # Can also be the path to a Kurtosis package in the repo, e.g. './path/to/kurtosis-package'
-          args: './test-args.yaml'
+          args-file: './test-args.yaml'
 ```
 
 Running Kurtosis on Kurtosis Cloud:
@@ -46,7 +46,7 @@ jobs:
         uses: kurtosis-tech/kurtosis-github-action@v1
         with:
           path: 'github.com/my-org/my-kurtosis-package'  # Can also be the path to a Kurtosis package in the repo, e.g. './path/to/kurtosis-package'
-          args: './test-args.yaml'
+          args-file: './test-args.yaml'
           cloud_api_key: ${{ secrets.KURTOSIS_CLOUD_API_KEY }}
           cloud_instance_id: ${{ secrets.KURTOSIS_CLOUD_INSTANCE_ID }}
 ```

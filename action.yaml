@@ -7,7 +7,7 @@ inputs:
   path:
     description: 'Path of the Kurtosis Package (directory, url)'
     required: true
-  args:
+  args-file:
     description: 'Path to the arguments file'
     required: false
     default: ''
@@ -68,7 +68,7 @@ runs:
           fi
         shell: bash
         env:
-          ARGS_FILE: ${{ inputs.args }}
+          ARGS_FILE: ${{ inputs.args-file }}
           PATH: ${{ inputs.path }}
       - name: Generate Service Links
         if: inputs.cloud_instance_id != '' && inputs.cloud_api_key != ''

@@ -88,10 +88,10 @@ runs:
           INSTANCE_ID_PREFIX=$(echo "${{ inputs.cloud_instance_id }}" | cut -c 1-12)
 
           # Command to get the current output of `kurtosis context ls`
-          KURTOSIS_OUTPUT=$(kurtosis context ls)
+          KURTOSIS_CONTEXT_OUTPUT=$(kurtosis context ls)
 
           # Parse the output, find the matching INSTANCE_ID_PREFIX, and transform the IP address
-          echo "$KURTOSIS_OUTPUT" | awk -v uuid="$INSTANCE_ID_PREFIX" '
+          echo "$KURTOSIS_CONTEXT_OUTPUT" | awk -v uuid="$INSTANCE_ID_PREFIX" '
           $1 == uuid {
               gsub(/\./, "-", $3)
               echo "Enclave: $ENCLAVE_NAME started on https://cloud.kurtosis.com/gateway/ips/$3/ports/9711/enclave/$ENCLAVE_UUID/overview" > comment_output.txt

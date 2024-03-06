@@ -90,18 +90,28 @@ runs:
           # Command to get the current output of `kurtosis context ls`
           KURTOSIS_CONTEXT_OUTPUT=$(kurtosis context ls)
 
-          # Parse the output, find the matching INSTANCE_ID_PREFIX, and transform the IP address
+          KURTOSIS_CONTEXT_OUTPUT="$(kurtosis context ls)"
+
+          # Parse the output, find the matching INSTANCE_ID_PREFIX (accounting for a possible leading asterisk), and transform the IP address
           MODIFIED_IP=$(echo "$KURTOSIS_CONTEXT_OUTPUT" | awk -v uuid="$INSTANCE_ID_PREFIX" '
-          $1 == uuid {
-              gsub(/\./, "-", $3)
-              print $3
-              exit
+          {
+              # Remove leading asterisk if present
+              gsub(/^\*/, "", $1)
+              # Check if the cleaned-up $2 matches the uuid
+              if ($2 == uuid) {
+                  # Replace dots with dashes in the IP address ($3)
+                  gsub(/\./, "-", $4)
+                  print $4
+                  exit
+              }
           }')
 
           # Check if we found and modified an IP
           if [[ -n "$MODIFIED_IP" ]]; then
               # Use the modified IP in the echo statement and write to comment_output.txt
               echo "Enclave: $ENCLAVE_NAME started on https://cloud.kurtosis.com/gateway/ips/$MODIFIED_IP/ports/9711/enclave/$ENCLAVE_UUID/overview" > comment_output.txt
+          else
+              echo "Enclave: $ENCALVE_NAME runing on https://cloud.kurtosis.com" > comment_output.txt
           fi
 
           # For each service, generate the link
@@ -115,7 +125,6 @@ runs:
               echo "Service URL: $URL" >> comment_output.txt
             fi
           done
-          echo "Service URLs if any might have to be copied and pasted if you are getting 401s!" >> comment_output.txt
         shell: bash
         env:
           CLOUD_INSTANCE_ID: ${{ inputs.cloud_instance_id }}
